@@ -388,6 +388,10 @@
     "$label.MAX_HISTORY_ENTRIES": "Max History Entries",
     "$title.cmdDisplay": "Output Display"
   },
+  "wikilink": {
+    "pluginName": "Wiki Links",
+    "fileNotFound": "Wiki link target not found: {{file}}"
+  },
   "md_padding": {
     "pluginName": "Chinese-English Text Spacer",
     "done": "Spacing applied successfully",

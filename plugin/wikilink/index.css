@@ -1,0 +1,17 @@
+#write .plu-wikilink {
+  font-size: 0 !important;
+  letter-spacing: 0 !important;
+  word-spacing: 0 !important;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+#write .plu-wikilink::after {
+  content: attr(data-label);
+  font-size: var(--plu-wikilink-size);
+  letter-spacing: var(--plu-wikilink-letter-spacing);
+  word-spacing: var(--plu-wikilink-word-spacing);
+  color: var(--primary-color, #4183c4);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}

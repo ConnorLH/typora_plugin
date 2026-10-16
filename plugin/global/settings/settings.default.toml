@@ -157,6 +157,12 @@ CONTEXT_MENU = ["closeTab", "closeOtherTabs", "closeLeftTabs", "closeRightTabs",
 ENFORCE_SINGLETON = false
 
 
+[wikilink]
+# Open Obsidian-style [[note]], [[folder/note#Heading|alias]] and [[#Heading]] links with Ctrl+Click
+ENABLE = true
+NAME = ""
+
+
 [search_multi]
 # =========== [ Basic ] ===========
 ENABLE = true

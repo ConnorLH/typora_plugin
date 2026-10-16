@@ -388,6 +388,10 @@
     "$label.MAX_HISTORY_ENTRIES": "最大历史记录数",
     "$title.cmdDisplay": "输出显示"
   },
+  "wikilink": {
+    "pluginName": "双链",
+    "fileNotFound": "未找到双链目标：{{file}}"
+  },
   "md_padding": {
     "pluginName": "中英文混排优化",
     "done": "混排优化完成",

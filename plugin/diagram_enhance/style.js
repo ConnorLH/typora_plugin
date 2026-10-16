@@ -32,7 +32,7 @@ ${CONTENT_SELECTOR} {
   width: 100%;
   min-width: 100%;
   min-height: 100%;
-  transform: translate3d(0, 0, 0) scale(1);
+  transform: translate(0, 0) scale(1);
   transform-origin: 0 0;
 }
 ${SURFACE_SELECTOR}.plugin-diagram-pan-enabled ${CONTENT_SELECTOR} {

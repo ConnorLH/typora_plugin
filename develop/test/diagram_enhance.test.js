@@ -65,6 +65,24 @@ test("registers non-passive wheel and pointer gesture handlers", () => {
   assert.doesNotMatch(source, /_openModal|cloneNode|_copyCanvasPixels/)
 })
 
+test("uses a 2D transform for SVG diagram zoom", () => {
+  const instance = makeInstance()
+  instance._syncToolbar = () => {}
+  const state = {
+    content: { style: {} },
+    surface: { dataset: {} },
+    scale: 2,
+    translateX: 12,
+    translateY: -8,
+    wheelZoomEnabled: true,
+  }
+
+  instance._applyTransform(state)
+
+  assert.equal(state.content.style.transform, "translate(12px, -8px) scale(2)")
+  assert.match(instance.style(), /transform: translate\(0, 0\) scale\(1\)/)
+})
+
 test("can disable fullscreen and resize surfaces through existing config", () => {
   const instance = makeInstance({ SHOW_FULLSCREEN: false, RESIZABLE: false })
   assert.doesNotMatch(instance._toolbarHTML(), /data-action="fullscreen"/)

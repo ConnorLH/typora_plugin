@@ -19,15 +19,15 @@ class CalloutsPlugin extends BasePlugin {
   }
 
   setCallouts = () => {
-    this.utils.entities.querySelectorAllInWrite("blockquote > p:first-child").forEach(p => {
+    this.utils.entities.querySelectorAllInWrite("blockquote > p:first-child, .md-alert > p:first-child").forEach(p => {
       const blockquote = p.parentElement
-      const result = p.textContent.match(/^\[!(?<type>\w+)\](?<fold>[+-]?)/)
+      const result = p.textContent.match(/^\[!(?<type>\w+)\](?<fold>[+-]?)(?<title>[^\r\n]*)/)
       const ok = !!(result?.groups)
       blockquote.classList.toggle("plugin-callout", ok)
       if (ok) {
-        const { type, fold } = result.groups
+        const { type, fold, title } = result.groups
         // Add data-type attribute to spans containing [!type]
-        p.querySelector("span:first-child")?.setAttribute("data-type", type)
+        p.querySelector("span:first-child")?.setAttribute("data-type", title.trim() || type)
         blockquote.setAttribute("callout-type", type.toLowerCase())
         blockquote.classList.toggle("callout-folded", fold === "-")
       }
@@ -55,23 +55,23 @@ class CalloutsPlugin extends BasePlugin {
   afterExport = (html, ...args) => {
     if (!this.check(args)) return
 
-    const quotesInPage = [...this.utils.entities.querySelectorAllInWrite("blockquote")]
+    const quotesInPage = [...this.utils.entities.querySelectorAllInWrite("blockquote, .md-alert")]
     if (quotesInPage.length === 0) return
 
     const doc = new DOMParser().parseFromString(html, "text/html")
-    const quotesInHTML = [...doc.querySelectorAll("blockquote")]
+    const quotesInHTML = [...doc.querySelectorAll("blockquote, .md-alert")]
     if (quotesInHTML.length !== quotesInPage.length) return
 
     const zipArray = this.utils.zip(quotesInPage, quotesInHTML)
     for (const [quoteInPage, quoteInHTML] of zipArray) {
-      if (quoteInPage.classList.length) {
+      if (quoteInPage.classList.contains("plugin-callout")) {
         quoteInHTML.className = "plugin-callout"
 
         const calloutType = quoteInPage.getAttribute("callout-type")
         quoteInHTML.setAttribute("callout-type", calloutType)
 
         const span = quoteInHTML.querySelector(":scope > p:first-child > span:first-child")
-        span?.setAttribute("data-type", calloutType.toUpperCase())
+        span?.setAttribute("data-type", quoteInPage.querySelector(":scope > p:first-child > span:first-child")?.getAttribute("data-type") || calloutType)
       }
     }
     return `<!DOCTYPE HTML>\n${doc.documentElement.outerHTML}`

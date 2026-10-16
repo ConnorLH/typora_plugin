@@ -297,6 +297,40 @@ const runBrowserVerification = async () => {
 
     await canvasSurface.locator('[data-action="fullscreen"]').click()
     assert.equal(await canvasSurface.evaluate(() => document.fullscreenElement === null), true)
+
+    const originalSvgHandle = await svgSurface.locator("svg").elementHandle()
+    await svgSurface.locator('[data-action="reset"]').click()
+    await svgSurface.locator('[data-action="wheel-toggle"]').click()
+    await svgSurface.locator('[data-action="fullscreen"]').click()
+    assert.equal(await svgSurface.evaluate(surface => document.fullscreenElement === surface), true)
+    const fullscreenSvg = await svgSurface.evaluate((surface, original) => {
+      const svg = surface.querySelector("svg")
+      const beforeWidth = svg.getBoundingClientRect().width
+      const rect = surface.getBoundingClientRect()
+      const event = new WheelEvent("wheel", {
+        bubbles: true,
+        cancelable: true,
+        clientX: rect.left + rect.width / 2,
+        clientY: rect.top + rect.height / 2,
+        deltaY: -100,
+      })
+      surface.dispatchEvent(event)
+      return {
+        sameSvg: svg === original,
+        prevented: event.defaultPrevented,
+        scale: Number(surface.dataset.diagramScale),
+        beforeWidth,
+        afterWidth: svg.getBoundingClientRect().width,
+        transform: getComputedStyle(surface.querySelector(".plugin-diagram-content")).transform,
+      }
+    }, originalSvgHandle)
+    assert.equal(fullscreenSvg.sameSvg, true)
+    assert.equal(fullscreenSvg.prevented, true)
+    assert.ok(fullscreenSvg.scale > 1)
+    assert.ok(fullscreenSvg.afterWidth > fullscreenSvg.beforeWidth)
+    assert.match(fullscreenSvg.transform, /^matrix\(/)
+    await svgSurface.locator('[data-action="fullscreen"]').click()
+    assert.equal(await svgSurface.evaluate(() => document.fullscreenElement === null), true)
   } finally {
     await browser.close()
   }

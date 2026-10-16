@@ -492,7 +492,7 @@ class DiagramEnhancePlugin extends BasePlugin {
 
   _applyTransform = state => {
     if (!state.content) return
-    state.content.style.transform = `translate3d(${state.translateX}px, ${state.translateY}px, 0) scale(${state.scale})`
+    state.content.style.transform = `translate(${state.translateX}px, ${state.translateY}px) scale(${state.scale})`
     state.surface.dataset.diagramScale = String(state.scale)
     state.surface.dataset.diagramTranslateX = String(state.translateX)
     state.surface.dataset.diagramTranslateY = String(state.translateY)
